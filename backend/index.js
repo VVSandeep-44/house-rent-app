@@ -25,7 +25,7 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-const { protect } = require("./middlewares/authMiddleware");
+const { protect, authorizeRoles } = require("./middlewares/authMiddleware");
 
 app.get("/api/protected", protect, (req, res) => {
   res.json({
@@ -33,3 +33,36 @@ app.get("/api/protected", protect, (req, res) => {
     user: req.user,
   });
 });
+
+
+
+
+// Admin only route
+app.get(
+  "/api/admin-only",
+  protect,
+  authorizeRoles("admin"),
+  (req, res) => {
+    res.json({ message: "Welcome Admin" });
+  }
+);
+
+// Owner only route
+app.get(
+  "/api/owner-only",
+  protect,
+  authorizeRoles("owner"),
+  (req, res) => {
+    res.json({ message: "Welcome Owner" });
+  }
+);
+
+// Renter only route
+app.get(
+  "/api/renter-only",
+  protect,
+  authorizeRoles("renter"),
+  (req, res) => {
+    res.json({ message: "Welcome Renter" });
+  }
+);
