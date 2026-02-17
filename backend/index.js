@@ -1,7 +1,9 @@
 require("dotenv").config();
 const propertyRoutes = require("./routes/propertyRoutes");
+const bookingRoutes = require("./routes/bookingRoutes");
 const authRoutes = require("./routes/authRoutes");
 const connectDB = require("./config/connect");
+
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
@@ -23,6 +25,9 @@ connectDB();
 app.use("/api/auth", authRoutes);
 
 app.use("/api/properties", propertyRoutes);
+
+app.use("/api/bookings", bookingRoutes);
+
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
