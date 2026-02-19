@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 
 const protect = (req, res, next) => {
   let token;
-  console.log("JWT_SECRET in middleware:", process.env.JWT_SECRET);
 
 
   if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
