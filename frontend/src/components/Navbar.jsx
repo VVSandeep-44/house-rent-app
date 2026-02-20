@@ -9,10 +9,12 @@ function Navbar() {
   };
 
   return (
-    <div style={{ padding: "15px", background: "#eee", display: "flex", justifyContent: "space-between" }}>
-      <h3>House Rent App</h3>
-      <button onClick={handleLogout}>Logout</button>
-    </div>
+    <nav className="navbar navbar-dark bg-dark px-4">
+      <span className="navbar-brand">RentEase</span>
+      <button className="btn btn-danger btn-sm" onClick={handleLogout}>
+        Logout
+      </button>
+    </nav>
   );
 }
 

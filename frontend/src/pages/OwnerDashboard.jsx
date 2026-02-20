@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
-import Navbar from "../components/Navbar";
+import Layout from "../components/Layout";
 
 function OwnerDashboard() {
   const [bookings, setBookings] = useState([]);
@@ -12,15 +12,22 @@ function OwnerDashboard() {
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
 
-
   const fetchBookings = async () => {
-    const res = await API.get("/bookings");
-    setBookings(res.data);
+    try {
+      const res = await API.get("/bookings");
+      setBookings(res.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const fetchProperties = async () => {
-    const res = await API.get("/properties/owner");
-    setProperties(res.data);
+    try {
+      const res = await API.get("/properties/owner");
+      setProperties(res.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
@@ -41,7 +48,7 @@ function OwnerDashboard() {
         description,
       });
 
-      alert("Property added");
+      alert("Property added successfully");
       setTitle("");
       setType("");
       setAddress("");
@@ -54,54 +61,139 @@ function OwnerDashboard() {
   };
 
   const updateStatus = async (bookingId, status) => {
-    await API.put(`/bookings/${bookingId}`, { status });
-    fetchBookings();
+    try {
+      await API.put(`/bookings/${bookingId}`, { status });
+      fetchBookings();
+    } catch (error) {
+      alert(error.response?.data?.message || "Update failed");
+    }
   };
 
   return (
-    <>
-      <Navbar />
-      <div style={{ padding: "40px" }}>
-        <h2>Owner Dashboard</h2>
+    <Layout>
+      <h2 className="mb-4">Owner Dashboard</h2>
 
-        <h3>Add Property</h3>
-        <form onSubmit={handleAddProperty}>
-          <input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} required />
-          <br /><br />
-          <input placeholder="Type" value={type} onChange={(e) => setType(e.target.value)} required />
-          <br /><br />
-          <input placeholder="Address" value={address} onChange={(e) => setAddress(e.target.value)} required />
-          <br /><br />
-          <input type="number" placeholder="Price" value={price} onChange={(e) => setPrice(e.target.value)} required />
-          <br /><br />
-          <textarea placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
-          <br /><br />
-          <button type="submit">Add Property</button>
-        </form>
+      {/* Add Property Section */}
+      <div className="card mb-4 shadow-sm">
+        <div className="card-body">
+          <h5 className="card-title mb-3">Add New Property</h5>
 
-        <h3>Your Properties</h3>
-        {properties.map((property) => (
-          <div key={property._id} style={{ border: "1px solid gray", margin: "10px", padding: "10px" }}>
-            <p>{property.title} - ₹{property.price}</p>
+          <form onSubmit={handleAddProperty}>
+            <div className="row g-3">
+              <div className="col-md-6">
+                <input
+                  className="form-control"
+                  placeholder="Title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="col-md-6">
+                <input
+                  className="form-control"
+                  placeholder="Type"
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="col-md-6">
+                <input
+                  className="form-control"
+                  placeholder="Address"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="col-md-6">
+                <input
+                  type="number"
+                  className="form-control"
+                  placeholder="Price"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="col-12">
+                <textarea
+                  className="form-control"
+                  placeholder="Description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <button className="btn btn-primary mt-3">
+              Add Property
+            </button>
+          </form>
+        </div>
+      </div>
+
+      {/* Owner Properties */}
+      <h4 className="mb-3">Your Properties</h4>
+      {properties.map((property) => (
+        <div key={property._id} className="card mb-3 shadow-sm">
+          <div className="card-body">
+            <h5>{property.title}</h5>
+            <p>
+              Type: {property.type} <br />
+              Address: {property.address} <br />
+              Price: ₹{property.price}
+            </p>
           </div>
-        ))}
+        </div>
+      ))}
 
-        <h3>Booking Requests</h3>
-        {bookings.map((booking) => (
-          <div key={booking._id} style={{ border: "1px solid gray", margin: "10px", padding: "10px" }}>
-            <p>Property: {booking.property?.title}</p>
-            <p>Status: {booking.status}</p>
+      {/* Booking Requests */}
+      <h4 className="mt-5 mb-3">Booking Requests</h4>
+      {bookings.map((booking) => (
+        <div key={booking._id} className="card mb-3 shadow-sm">
+          <div className="card-body">
+            <p>
+              Property: {booking.property?.title}
+            </p>
+
+            <span
+              className={`badge me-3 ${
+                booking.status === "approved"
+                  ? "bg-success"
+                  : booking.status === "rejected"
+                  ? "bg-danger"
+                  : "bg-warning text-dark"
+              }`}
+            >
+              {booking.status}
+            </span>
 
             {booking.status === "pending" && (
               <>
-                <button onClick={() => updateStatus(booking._id, "approved")}>Approve</button>
-                <button onClick={() => updateStatus(booking._id, "rejected")}>Reject</button>
+                <button
+                  className="btn btn-success btn-sm me-2"
+                  onClick={() => updateStatus(booking._id, "approved")}
+                >
+                  Approve
+                </button>
+                <button
+                  className="btn btn-danger btn-sm"
+                  onClick={() => updateStatus(booking._id, "rejected")}
+                >
+                  Reject
+                </button>
               </>
             )}
           </div>
-        ))}
-      </div>
-    </>
+        </div>
+      ))}
+    </Layout>
   );
 }
 

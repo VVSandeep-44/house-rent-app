@@ -1,18 +1,26 @@
 const express = require("express");
-const { addProperty, getAllProperties } = require("../controllers/propertyController");
-const { protect, authorizeRoles } = require("../middlewares/authMiddleware");
-const { getOwnerProperties } = require("../controllers/propertyController");
+const {
+  addProperty,
+  getAllProperties,
+  getOwnerProperties,
+} = require("../controllers/propertyController");
 
+const { protect, authorizeRoles } = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
 // Owner adds property
 router.post("/", protect, authorizeRoles("owner"), addProperty);
 
-// Anyone can view properties
+// Get all available properties (for renters/public)
 router.get("/", getAllProperties);
 
-// Owner views their properties
-router.get("/owner", protect, authorizeRoles("owner"), getOwnerProperties);
+// Get properties of logged-in owner
+router.get(
+  "/owner",
+  protect,
+  authorizeRoles("owner"),
+  getOwnerProperties
+);
 
 module.exports = router;

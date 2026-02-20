@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
 import API from "../services/api";
+import Layout from "../components/Layout";
 
 function AdminDashboard() {
   const [owners, setOwners] = useState([]);
 
-
-  useEffect(() => {
   const fetchPendingOwners = async () => {
     try {
       const res = await API.get("/admin/owners");
@@ -16,48 +14,51 @@ function AdminDashboard() {
     }
   };
 
-  fetchPendingOwners();
-}, []);
-
+  useEffect(() => {
+    (async () => {
+      await fetchPendingOwners();
+    })();
+  }, []);
 
   const approveOwner = async (ownerId) => {
-  try {
-    await API.put(`/admin/approve/${ownerId}`);
-
-    const res = await API.get("/admin/owners");
-    setOwners(res.data);
-
-    alert("Owner approved");
-  } catch (error) {
-    alert(error.response?.data?.message || "Approval failed");
-  }
-};
-
+    try {
+      await API.put(`/admin/approve/${ownerId}`);
+      fetchPendingOwners();
+    } catch (error) {
+      alert(error.response?.data?.message || "Approval failed");
+    }
+  };
 
   return (
-    <>
-    <Navbar />
-    <div style={{ padding: "40px" }}>
-      <h2>Admin Dashboard</h2>
+    <Layout>
+      <h2 className="mb-4">Admin Dashboard</h2>
 
-      {owners.map((owner) => (
-        <div
-          key={owner._id}
-          style={{
-            border: "1px solid gray",
-            margin: "10px",
-            padding: "10px",
-          }}
-        >
-          <p>Name: {owner.name}</p>
+      <h4 className="mb-3">Pending Owner Approvals</h4>
 
-          <button onClick={() => approveOwner(owner._id)}>
-            Approve
-          </button>
+      {owners.length === 0 ? (
+        <div className="alert alert-success">
+          No pending owners
         </div>
-      ))}
-    </div>
-    </>
+      ) : (
+        owners.map((owner) => (
+          <div key={owner._id} className="card mb-3 shadow-sm">
+            <div className="card-body d-flex justify-content-between align-items-center">
+              <div>
+                <h6 className="mb-1">{owner.name}</h6>
+                <small>{owner.email}</small>
+              </div>
+
+              <button
+                className="btn btn-primary btn-sm"
+                onClick={() => approveOwner(owner._id)}
+              >
+                Approve
+              </button>
+            </div>
+          </div>
+        ))
+      )}
+    </Layout>
   );
 }
 
