@@ -48,4 +48,15 @@ const getAllProperties = async (req, res) => {
   }
 };
 
-module.exports = { addProperty, getAllProperties };
+// Get properties for logged-in owner
+const getOwnerProperties = async (req, res) => {
+  try {
+    const properties = await Property.find({ owner: req.user.id });
+    res.status(200).json(properties);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+
+module.exports = { addProperty, getAllProperties, getOwnerProperties };
