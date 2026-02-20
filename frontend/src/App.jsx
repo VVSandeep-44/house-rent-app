@@ -12,9 +12,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-        <Route path="/owner" element={<ProtectedRoute><OwnerDashboard /></ProtectedRoute>} />
-        <Route path="/renter" element={<ProtectedRoute><RenterDashboard /></ProtectedRoute>} />
+        <Route path="/admin" element={<ProtectedRoute allowedRole="admin"><AdminDashboard /></ProtectedRoute>} />
+        <Route path="/owner" element={<ProtectedRoute allowedRole="owner"><OwnerDashboard /></ProtectedRoute>} />
+        <Route path="/renter" element={<ProtectedRoute allowedRole="renter"><RenterDashboard /></ProtectedRoute>} />
       </Routes>
     </Router>
   );

@@ -30,6 +30,9 @@ app.use("/api/bookings", bookingRoutes);
 
 app.use("/api/admin", adminRoutes);
 
+const errorHandler = require("./middlewares/errorMiddleware");
+app.use(errorHandler);
+
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
