@@ -11,6 +11,24 @@ const createBooking = async (req, res) => {
       return res.status(404).json({ message: "Property not found" });
     }
 
+    // Check duplicate booking
+const existingBooking = await Booking.findOne({
+  property: propertyId,
+  renter: req.user.id,
+});
+
+if (existingBooking) {
+  return res.status(400).json({
+    message: "You have already requested this property",
+  });
+}
+
+if (!property.isAvailable) {
+  return res.status(400).json({
+    message: "Property is not available",
+  });
+}
+
     const booking = await Booking.create({
       property: property._id,
       renter: req.user.id,
@@ -36,7 +54,16 @@ const updateBookingStatus = async (req, res) => {
       return res.status(404).json({ message: "Booking not found" });
     }
 
-    booking.status = status;
+    if (status === "approved") {
+  booking.status = "approved";
+
+  // Disable property
+  const property = await Property.findById(booking.property);
+  property.isAvailable = false;
+  await property.save();
+} else {
+  booking.status = status;
+}
     await booking.save();
 
     res.status(200).json({
