@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Navbar from "../components/Navbar";
 import API from "../services/api";
 
 function AdminDashboard() {
@@ -34,6 +35,8 @@ function AdminDashboard() {
 
 
   return (
+    <>
+    <Navbar />
     <div style={{ padding: "40px" }}>
       <h2>Admin Dashboard</h2>
 
@@ -54,6 +57,7 @@ function AdminDashboard() {
         </div>
       ))}
     </div>
+    </>
   );
 }
 

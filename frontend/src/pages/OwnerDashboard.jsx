@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
+import Navbar from "../components/Navbar";
+
 
 function OwnerDashboard() {
   const [bookings, setBookings] = useState([]);
@@ -35,6 +37,8 @@ function OwnerDashboard() {
 
 
   return (
+    <>
+    <Navbar />
     <div style={{ padding: "40px" }}>
       <h2>Owner Dashboard</h2>
 
@@ -64,6 +68,7 @@ function OwnerDashboard() {
         </div>
       ))}
     </div>
+    </>
   );
 }
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
+import Navbar from "../components/Navbar";
 
 function RenterDashboard() {
   const [properties, setProperties] = useState([]);
@@ -35,9 +36,10 @@ function RenterDashboard() {
   };
 
   return (
+    <>
+    <Navbar />
     <div style={{ padding: "40px" }}>
       <h2>Renter Dashboard</h2>
-
       {properties.map((property) => (
         <div key={property._id} style={{ border: "1px solid gray", margin: "10px", padding: "10px" }}>
           <h3>{property.title}</h3>
@@ -50,6 +52,7 @@ function RenterDashboard() {
         </div>
       ))}
     </div>
+    </>
   );
 }
 
