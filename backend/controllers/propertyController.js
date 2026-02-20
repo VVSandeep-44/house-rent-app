@@ -40,7 +40,9 @@ const addProperty = async (req, res) => {
 // Get all properties (Public)
 const getAllProperties = async (req, res) => {
   try {
-    const properties = await Property.find().populate("owner", "name email");
+    const properties = await Property.find({ isAvailable: true })
+  .populate("owner", "name email");
+
 
     res.status(200).json(properties);
   } catch (error) {
