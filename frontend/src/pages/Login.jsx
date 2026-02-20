@@ -3,55 +3,65 @@ import { useNavigate } from "react-router-dom";
 import API from "../services/api";
 
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+    const handleLogin = async (e) => {
+        e.preventDefault();
 
-    try {
-      const res = await API.post("/auth/login", { email, password });
+        try {
+            const res = await API.post("/auth/login", { email, password });
 
-      localStorage.setItem("token", res.data.token);
+            localStorage.setItem("token", res.data.token);
 
-      const role = res.data.user.role;
+            const role = res.data.user.role;
 
-      if (role === "admin") navigate("/admin");
-      else if (role === "owner") navigate("/owner");
-      else navigate("/renter");
-    } catch (error) {
-      alert(error.response?.data?.message || "Login failed");
-    }
-  };
+            if (role === "admin") navigate("/admin");
+            else if (role === "owner") navigate("/owner");
+            else navigate("/renter");
+        } catch (error) {
+            alert(error.response?.data?.message || "Login failed");
+        }
+    };
 
-  return (
-    <div style={{ padding: "40px" }}>
-      <h2>Login</h2>
+    return (
+        <div style={{ padding: "40px" }}>
+            <h2>Login</h2>
 
-      <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <br /><br />
+            <form onSubmit={handleLogin}>
+                <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
+                <br /><br />
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <br /><br />
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+                <br /><br />
 
-        <button type="submit">Login</button>
-      </form>
-    </div>
-  );
+                <button type="submit">Login</button>
+            </form>
+            <p>
+                Don't have an account?{" "}
+                <span
+                    style={{ color: "blue", cursor: "pointer" }}
+                    onClick={() => navigate("/register")}
+                >
+                    Register
+                </span>
+            </p>
+
+        </div>
+    );
 }
 
 export default Login;
