@@ -11,10 +11,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      const res = await API.post("/auth/login", {
-        email,
-        password,
-      });
+      const res = await API.post("/auth/login", { email, password });
 
       const { token, user } = res.data;
       localStorage.setItem("token", token);
@@ -22,16 +19,30 @@ function Login() {
       if (user.role === "admin") navigate("/admin");
       else if (user.role === "owner") navigate("/owner");
       else navigate("/renter");
-
     } catch (error) {
       alert(error.response?.data?.message || "Login failed");
     }
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
-      <div className="card shadow-sm p-4" style={{ width: "400px" }}>
-        <h3 className="text-center mb-4">Dwell-In Login</h3>
+    <div
+      className="d-flex justify-content-center align-items-center vh-100 text-white"
+      style={{
+        background: "linear-gradient(135deg, #5b5fef, #7a7df7)",
+      }}
+    >
+      <div
+        className="auth-card p-5 rounded-4 shadow-lg fade-in"
+        style={{
+          width: "400px",
+          background: "rgba(255,255,255,0.12)",
+          backdropFilter: "blur(14px)",
+          border: "1px solid rgba(255,255,255,0.2)",
+        }}
+      >
+        <h3 className="text-center mb-4 fw-semibold">
+          Welcome Back to Dwell-In
+        </h3>
 
         <form onSubmit={handleLogin}>
           <div className="mb-3">
@@ -45,7 +56,7 @@ function Login() {
             />
           </div>
 
-          <div className="mb-3">
+          <div className="mb-4">
             <input
               type="password"
               className="form-control"
@@ -56,15 +67,15 @@ function Login() {
             />
           </div>
 
-          <button className="btn btn-primary w-100">
+          <button className="auth-btn w-100">
             Login
           </button>
         </form>
 
-        <p className="text-center mt-3 mb-0">
+        <p className="text-center mt-4 mb-0">
           Don't have an account?{" "}
           <span
-            style={{ cursor: "pointer", color: "blue" }}
+            style={{ cursor: "pointer", fontWeight: 500 }}
             onClick={() => navigate("/register")}
           >
             Register

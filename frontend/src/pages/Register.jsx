@@ -7,6 +7,7 @@ function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("renter");
+  const [open, setOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -22,16 +23,31 @@ function Register() {
       });
 
       alert("Registration successful");
-      navigate("/");
+      navigate("/login");
     } catch (error) {
       alert(error.response?.data?.message || "Registration failed");
     }
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
-      <div className="card shadow-sm p-4" style={{ width: "400px" }}>
-        <h3 className="text-center mb-4">Create Account</h3>
+    <div
+      className="d-flex justify-content-center align-items-center vh-100 text-white"
+      style={{
+        background: "linear-gradient(135deg, #5b5fef, #7a7df7)",
+      }}
+    >
+      <div
+        className="auth-card p-5 rounded-4 shadow-lg fade-in"
+        style={{
+          width: "420px",
+          background: "rgba(255,255,255,0.12)",
+          backdropFilter: "blur(14px)",
+          border: "1px solid rgba(255,255,255,0.2)",
+        }}
+      >
+        <h3 className="text-center mb-4 fw-semibold">
+          Create Your Dwell-In Account
+        </h3>
 
         <form onSubmit={handleRegister}>
           <div className="mb-3">
@@ -66,26 +82,49 @@ function Register() {
             />
           </div>
 
-          <div className="mb-3">
-            <select
-              className="form-select"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
+          <div className="custom-select-wrapper mb-4">
+            <div
+              className="custom-select"
+              onClick={() => setOpen(!open)}
             >
-              <option value="renter">Renter</option>
-              <option value="owner">Owner</option>
-            </select>
+              {role === "renter" ? "Renter" : "Owner"}
+              <span className={`arrow ${open ? "rotate" : ""}`}>⌄</span>
+            </div>
+
+            {open && (
+              <div className="custom-options">
+                <div
+                  className="custom-option"
+                  onClick={() => {
+                    setRole("renter");
+                    setOpen(false);
+                  }}
+                >
+                  Renter
+                </div>
+
+                <div
+                  className="custom-option"
+                  onClick={() => {
+                    setRole("owner");
+                    setOpen(false);
+                  }}
+                >
+                  Owner
+                </div>
+              </div>
+            )}
           </div>
 
-          <button className="btn btn-primary w-100">
+          <button className="auth-btn w-100">
             Register
           </button>
         </form>
 
-        <p className="text-center mt-3 mb-0">
+        <p className="text-center mt-4 mb-0">
           Already have an account?{" "}
           <span
-            style={{ cursor: "pointer", color: "blue" }}
+            style={{ cursor: "pointer", fontWeight: 500 }}
             onClick={() => navigate("/login")}
           >
             Login
