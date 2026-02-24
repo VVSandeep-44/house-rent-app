@@ -9,11 +9,28 @@ function Navbar() {
   };
 
   return (
-    <nav className="navbar navbar-dark bg-dark px-4">
-      <span className="navbar-brand">RentEase</span>
-      <button className="btn btn-danger btn-sm" onClick={handleLogout}>
-        Logout
-      </button>
+    <nav
+      className="navbar navbar-expand-lg"
+      style={{
+        background: "linear-gradient(90deg, #5b5fef, #7a7df7)",
+      }}
+    >
+      <div className="container">
+        <span
+          className="navbar-brand text-white fw-bold"
+          style={{ cursor: "pointer" }}
+          onClick={() => navigate("/")}
+        >
+          Dwell-In
+        </span>
+
+        <button
+          className="btn btn-light btn-sm"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
+      </div>
     </nav>
   );
 }

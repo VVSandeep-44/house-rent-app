@@ -139,7 +139,8 @@ function OwnerDashboard() {
       </div>
 
       {/* Owner Properties */}
-      <h4 className="mb-3">Your Properties</h4>
+      <h4 className="fw-semibold mb-4 border-bottom pb-2">
+  Your Properties</h4>
       {properties.map((property) => (
         <div key={property._id} className="card mb-3 shadow-sm">
           <div className="card-body">
@@ -154,7 +155,9 @@ function OwnerDashboard() {
       ))}
 
       {/* Booking Requests */}
-      <h4 className="mt-5 mb-3">Booking Requests</h4>
+      <h4 className="fw-semibold mb-4 border-bottom pb-2">
+  Booking Requests
+</h4>
       {bookings.map((booking) => (
         <div key={booking._id} className="card mb-3 shadow-sm">
           <div className="card-body">

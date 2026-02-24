@@ -33,7 +33,8 @@ function AdminDashboard() {
     <Layout>
       <h2 className="mb-4">Admin Dashboard</h2>
 
-      <h4 className="mb-3">Pending Owner Approvals</h4>
+      <h4 className="fw-semibold mb-4 border-bottom pb-2">
+        Pending Owner Approvals</h4>
 
       {owners.length === 0 ? (
         <div className="alert alert-success">
