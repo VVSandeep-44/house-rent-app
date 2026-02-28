@@ -119,22 +119,64 @@ This ensures a complete end-to-end booking lifecycle implementation.
 
 ## 📂 Project Structure
 
+```
+
 house-rent-app/
 │
+├── package.json
+├── README.md
 ├── backend/
+│   ├── index.js
+│   ├── package.json
+│   ├── config/
+│   │   └── connect.js
 │   ├── controllers/
-│   ├── models/
-│   ├── routes/
+│   │   ├── adminController.js
+│   │   ├── authController.js
+│   │   ├── bookingController.js
+│   │   └── propertyController.js
 │   ├── middlewares/
-│   └── config/
+│   │   ├── authMiddleware.js
+│   │   └── errorMiddleware.js
+│   ├── models/
+│   │   ├── Booking.js
+│   │   ├── Property.js
+│   │   └── User.js
+│   ├── routes/
+│   │   ├── adminRoutes.js
+│   │   ├── authRoutes.js
+│   │   ├── bookingRoutes.js
+│   │   └── propertyRoutes.js
+│   └── uploads/
 │
 ├── frontend/
-│   ├── components/
-│   ├── pages/
-│   ├── services/
-│   └── assets/
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── package.json
+│   ├── README.md
+│   ├── vite.config.js
+│   ├── public/
+│   └── src/
+│       ├── App.jsx
+│       ├── index.css
+│       ├── main.jsx
+│       ├── components/
+│       │   ├── Layout.jsx
+│       │   ├── Navbar.jsx
+│       │   └── ProtectedRoute.jsx
+│       ├── pages/
+│       │   ├── AdminDashboard.jsx
+│       │   ├── Landing.jsx
+│       │   ├── Login.jsx
+│       │   ├── OwnerDashboard.jsx
+│       │   ├── Register.jsx
+│       │   └── RenterDashboard.jsx
+│       └── services/
+│           └── api.js
 │
-└── README.md
+└── Screenshots/
+
+```
 
 ---
 
