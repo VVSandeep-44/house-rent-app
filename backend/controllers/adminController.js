@@ -26,6 +26,18 @@ const getAllOwners = async (req, res) => {
   }
 };
 
+const getAllRenters = async (req, res) => {
+  try {
+    const renters = await User.find({ role: "renter" }).select(
+      "name email role isApproved profile createdAt"
+    );
+
+    res.status(200).json(renters);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
 // Approve owner
 const approveOwner = async (req, res) => {
   try {
@@ -58,4 +70,4 @@ const approveOwner = async (req, res) => {
   }
 };
 
-module.exports = { getPendingOwners, getAllOwners, approveOwner };
+module.exports = { getPendingOwners, getAllOwners, getAllRenters, approveOwner };

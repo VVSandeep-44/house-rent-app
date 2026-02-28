@@ -5,6 +5,9 @@ import Layout from "../components/Layout";
 function AdminDashboard() {
   const [owners, setOwners] = useState([]);
   const [allOwners, setAllOwners] = useState([]);
+  const [allRenters, setAllRenters] = useState([]);
+  const [ownerSearch, setOwnerSearch] = useState("");
+  const [renterSearch, setRenterSearch] = useState("");
   const [activeSection, setActiveSection] = useState("pending-approvals");
 
   const fetchPendingOwners = async () => {
@@ -25,10 +28,20 @@ function AdminDashboard() {
     }
   };
 
+  const fetchAllRenters = async () => {
+    try {
+      const res = await API.get("/admin/renters/all");
+      setAllRenters(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     (async () => {
       await fetchPendingOwners();
       await fetchAllOwners();
+      await fetchAllRenters();
     })();
   }, []);
 
@@ -37,6 +50,7 @@ function AdminDashboard() {
       await API.put(`/admin/approve/${ownerId}`);
       fetchPendingOwners();
       fetchAllOwners();
+      fetchAllRenters();
     } catch (error) {
       alert(error.response?.data?.message || "Approval failed");
     }
@@ -45,50 +59,70 @@ function AdminDashboard() {
   const adminNavItems = [
     { key: "pending-approvals", label: "Pending Approvals" },
     { key: "all-owner-profiles", label: "All Owner Profiles" },
+    { key: "all-renter-profiles", label: "All Renter Profiles" },
   ];
 
   const activeSectionLabel =
     adminNavItems.find((item) => item.key === activeSection)?.label || "Admin";
 
-  const renderOwnerCard = (owner, showApproveButton = false) => {
+  const renderUserProfileCard = (user, showApproveButton = false) => {
     const isProfileComplete =
-      owner.profile?.phone?.trim() &&
-      owner.profile?.city?.trim() &&
-      owner.profile?.idProof?.trim();
+      user.profile?.phone?.trim() &&
+      user.profile?.city?.trim() &&
+      user.profile?.idProof?.trim();
 
     return (
-      <div key={owner._id} className="card mb-3 shadow-sm border-0">
+      <div key={user._id} className="card mb-3 shadow-sm border-0">
         <div className="card-body d-flex justify-content-between align-items-start gap-3">
-          <div>
-            <h6 className="mb-1">{owner.name}</h6>
-            <small className="d-block mb-2">{owner.email}</small>
+          <div className="d-flex align-items-start gap-3">
+            <div>
+              {user.profile?.profilePhoto ? (
+                <img
+                  src={user.profile.profilePhoto}
+                  alt={`${user.name} profile`}
+                  style={{
+                    width: "56px",
+                    height: "56px",
+                    objectFit: "cover",
+                    borderRadius: "50%",
+                  }}
+                />
+              ) : (
+                <i className="bi bi-person-circle" style={{ fontSize: "2.5rem" }}></i>
+              )}
+            </div>
 
-            <p className="mb-1">
-              <strong>Phone:</strong> {owner.profile?.phone || "Not provided"}
-            </p>
-            <p className="mb-1">
-              <strong>City:</strong> {owner.profile?.city || "Not provided"}
-            </p>
-            <p className="mb-1">
-              <strong>ID Proof:</strong> {owner.profile?.idProof || "Not provided"}
-            </p>
-            {owner.profile?.bio && (
+            <div>
+              <h6 className="mb-1">{user.name}</h6>
+              <small className="d-block mb-2">{user.email}</small>
+
               <p className="mb-1">
-                <strong>Bio:</strong> {owner.profile.bio}
+                <strong>Phone:</strong> {user.profile?.phone || "Not provided"}
               </p>
-            )}
+              <p className="mb-1">
+                <strong>City:</strong> {user.profile?.city || "Not provided"}
+              </p>
+              <p className="mb-1">
+                <strong>ID Proof:</strong> {user.profile?.idProof || "Not provided"}
+              </p>
+              {user.profile?.bio && (
+                <p className="mb-1">
+                  <strong>Bio:</strong> {user.profile.bio}
+                </p>
+              )}
 
-            <span
-              className={`badge ${isProfileComplete ? "bg-success" : "bg-warning text-dark"}`}
-            >
-              {isProfileComplete ? "Profile Complete" : "Profile Incomplete"}
-            </span>
+              <span
+                className={`badge ${isProfileComplete ? "bg-success" : "bg-warning text-dark"}`}
+              >
+                {isProfileComplete ? "Profile Complete" : "Profile Incomplete"}
+              </span>
+            </div>
           </div>
 
           {showApproveButton && (
             <button
               className="btn btn-primary btn-sm"
-              onClick={() => approveOwner(owner._id)}
+              onClick={() => approveOwner(user._id)}
             >
               Approve
             </button>
@@ -97,6 +131,30 @@ function AdminDashboard() {
       </div>
     );
   };
+
+  const filteredOwners = allOwners.filter((owner) => {
+    const query = ownerSearch.trim().toLowerCase();
+    if (!query) return true;
+
+    return (
+      owner.name?.toLowerCase().includes(query) ||
+      owner.email?.toLowerCase().includes(query) ||
+      owner.profile?.phone?.toLowerCase().includes(query) ||
+      owner.profile?.city?.toLowerCase().includes(query)
+    );
+  });
+
+  const filteredRenters = allRenters.filter((renter) => {
+    const query = renterSearch.trim().toLowerCase();
+    if (!query) return true;
+
+    return (
+      renter.name?.toLowerCase().includes(query) ||
+      renter.email?.toLowerCase().includes(query) ||
+      renter.profile?.phone?.toLowerCase().includes(query) ||
+      renter.profile?.city?.toLowerCase().includes(query)
+    );
+  });
 
   return (
     <Layout>
@@ -139,6 +197,9 @@ function AdminDashboard() {
                 <span className="badge text-bg-light border px-3 py-2">
                   Total Owners: {allOwners.length}
                 </span>
+                <span className="badge text-bg-light border px-3 py-2">
+                  Total Renters: {allRenters.length}
+                </span>
               </div>
             </div>
           </div>
@@ -150,7 +211,7 @@ function AdminDashboard() {
               {owners.length === 0 ? (
                 <div className="alert alert-success">No pending owners</div>
               ) : (
-                owners.map((owner) => renderOwnerCard(owner, true))
+                owners.map((owner) => renderUserProfileCard(owner, true))
               )}
             </>
           )}
@@ -159,10 +220,42 @@ function AdminDashboard() {
             <>
               <h4 className="fw-semibold mb-4 border-bottom pb-2">All Owner Profiles</h4>
 
-              {allOwners.length === 0 ? (
+              <div className="mb-3">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Search owners by name, email, phone or city"
+                  value={ownerSearch}
+                  onChange={(e) => setOwnerSearch(e.target.value)}
+                />
+              </div>
+
+              {filteredOwners.length === 0 ? (
                 <div className="alert alert-info">No owners available.</div>
               ) : (
-                allOwners.map((owner) => renderOwnerCard(owner, false))
+                filteredOwners.map((owner) => renderUserProfileCard(owner, false))
+              )}
+            </>
+          )}
+
+          {activeSection === "all-renter-profiles" && (
+            <>
+              <h4 className="fw-semibold mb-4 border-bottom pb-2">All Renter Profiles</h4>
+
+              <div className="mb-3">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Search renters by name, email, phone or city"
+                  value={renterSearch}
+                  onChange={(e) => setRenterSearch(e.target.value)}
+                />
+              </div>
+
+              {filteredRenters.length === 0 ? (
+                <div className="alert alert-info">No renters available.</div>
+              ) : (
+                filteredRenters.map((renter) => renderUserProfileCard(renter, false))
               )}
             </>
           )}

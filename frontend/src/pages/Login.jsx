@@ -86,7 +86,7 @@ function Login() {
           Don't have an account?{" "}
           <span
             style={{ cursor: "pointer", fontWeight: 500 }}
-            onClick={() => navigate("/register")}
+            onClick={() => navigate("/register", { replace: true })}
           >
             Register
           </span>

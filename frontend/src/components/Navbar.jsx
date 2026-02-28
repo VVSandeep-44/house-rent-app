@@ -17,10 +17,16 @@ function Navbar({ navItems = [], activeNavKey, onNavSelect }) {
     >
       <div className="container">
         <span
-          className="navbar-brand text-white fw-bold"
+          className="navbar-brand text-white fw-bold d-flex align-items-center gap-2"
           style={{ cursor: "pointer" }}
           onClick={() => navigate("/")}
         >
+          <span
+            className="d-inline-flex justify-content-center align-items-center bg-white text-primary rounded-circle"
+            style={{ width: "30px", height: "30px" }}
+          >
+            <i className="bi bi-house-door-fill"></i>
+          </span>
           Dwell-In
         </span>
 
