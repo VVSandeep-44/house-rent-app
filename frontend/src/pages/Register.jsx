@@ -3,16 +3,47 @@ import { useNavigate } from "react-router-dom";
 import API from "../services/api";
 
 function Register() {
+  const navigate = useNavigate();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("renter");
-  const [open, setOpen] = useState(false);
+  const [nameEditable, setNameEditable] = useState(false);
+  const [emailEditable, setEmailEditable] = useState(false);
+  const [passwordEditable, setPasswordEditable] = useState(false);
 
-  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
+
+  const validateName = (name) => {
+    const nameRegex = /^[A-Za-z ]{2,}$/;
+    return nameRegex.test(name);
+  };
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   const handleRegister = async (e) => {
     e.preventDefault();
+
+    if (!validateName(name)) {
+      alert("Name must be at least 2 letters and contain only alphabets.");
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+
+    if (password.length < 8 || password.length > 12) {
+      alert("Password must be between 8 and 12 characters.");
+      return;
+    }
 
     try {
       await API.post("/auth/register", {
@@ -21,6 +52,14 @@ function Register() {
         password,
         role,
       });
+
+      setName("");
+      setEmail("");
+      setPassword("");
+      setRole("renter");
+      setOpen(false);
+      setShowPassword(false);
+      setPasswordError("");
 
       alert("Registration successful");
       navigate("/login");
@@ -50,45 +89,94 @@ function Register() {
         </h3>
 
         <form onSubmit={handleRegister}>
+          {/* Name */}
           <div className="mb-3">
             <input
               className="form-control"
               placeholder="Full Name"
+              autoComplete="name"
+              readOnly={!nameEditable}
+              onFocus={() => setNameEditable(true)}
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
             />
           </div>
 
+          {/* Email */}
           <div className="mb-3">
             <input
               type="email"
               className="form-control"
               placeholder="Email"
+              autoComplete="email"
+              readOnly={!emailEditable}
+              onFocus={() => setEmailEditable(true)}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
 
-          <div className="mb-3">
+          {/* Password */}
+          <div className="mb-3 position-relative">
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               className="form-control"
               placeholder="Password"
+              autoComplete="new-password"
+              readOnly={!passwordEditable}
+              onFocus={() => setPasswordEditable(true)}
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setPassword(value);
+
+                if (
+                  value.length > 0 &&
+                  (value.length < 8 || value.length > 12)
+                ) {
+                  setPasswordError(
+                    "Password must be 8–12 characters."
+                  );
+                } else {
+                  setPasswordError("");
+                }
+              }}
               required
             />
+
+            <span
+              className={`arrow ${showPassword ? "rotate" : ""}`}
+              style={{
+                position: "absolute",
+                right: "15px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+              }}
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? "🙈" : "👁"}
+            </span>
           </div>
 
+          {passwordError && (
+            <div className="auth-error mb-3">
+              {passwordError}
+            </div>
+          )}
+
+          {/* Role Dropdown */}
           <div className="custom-select-wrapper mb-4">
             <div
               className="custom-select"
               onClick={() => setOpen(!open)}
             >
               {role === "renter" ? "Renter" : "Owner"}
-              <span className={`arrow ${open ? "rotate" : ""}`}>⌄</span>
+              <span className={`arrow ${open ? "rotate" : ""}`}>
+                ⌄
+              </span>
             </div>
 
             {open && (
@@ -116,6 +204,7 @@ function Register() {
             )}
           </div>
 
+          {/* Register Button */}
           <button className="auth-btn w-100">
             Register
           </button>

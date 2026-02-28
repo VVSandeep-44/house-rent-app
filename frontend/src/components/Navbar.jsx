@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-function Navbar() {
+function Navbar({ navItems = [], activeNavKey, onNavSelect }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -23,6 +23,23 @@ function Navbar() {
         >
           Dwell-In
         </span>
+
+        {navItems.length > 0 && (
+          <div className="d-flex gap-2 ms-3">
+            {navItems.map((item) => (
+              <button
+                key={item.key}
+                type="button"
+                className={`btn btn-sm ${
+                  activeNavKey === item.key ? "btn-light" : "btn-outline-light"
+                }`}
+                onClick={() => onNavSelect?.(item.key)}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+        )}
 
         <button
           className="btn btn-light btn-sm"

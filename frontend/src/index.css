@@ -179,3 +179,16 @@ html {
 .arrow.rotate {
     transform: rotate(180deg);
 }
+
+/* Password Toggle Icon */
+.password-toggle {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  opacity: 0.8;
+}
+
+

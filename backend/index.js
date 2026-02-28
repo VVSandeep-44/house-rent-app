@@ -5,7 +5,6 @@ const adminRoutes = require("./routes/adminRoutes");
 const authRoutes = require("./routes/authRoutes");
 const connectDB = require("./config/connect");
 const express = require("express");
-const dotenv = require("dotenv");
 const cors = require("cors");
 
 

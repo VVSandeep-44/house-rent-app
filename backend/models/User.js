@@ -24,6 +24,28 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    profile: {
+      phone: {
+        type: String,
+        default: "",
+      },
+      city: {
+        type: String,
+        default: "",
+      },
+      idProof: {
+        type: String,
+        default: "",
+      },
+      bio: {
+        type: String,
+        default: "",
+      },
+      profilePhoto: {
+        type: String,
+        default: "",
+      },
+    },
   },
   { timestamps: true }
 );

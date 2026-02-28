@@ -5,6 +5,8 @@ import API from "../services/api";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailEditable, setEmailEditable] = useState(false);
+  const [passwordEditable, setPasswordEditable] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -15,6 +17,8 @@ function Login() {
 
       const { token, user } = res.data;
       localStorage.setItem("token", token);
+      setEmail("");
+      setPassword("");
 
       if (user.role === "admin") navigate("/admin");
       else if (user.role === "owner") navigate("/owner");
@@ -50,6 +54,9 @@ function Login() {
               type="email"
               className="form-control"
               placeholder="Email"
+              autoComplete="email"
+              readOnly={!emailEditable}
+              onFocus={() => setEmailEditable(true)}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -61,6 +68,9 @@ function Login() {
               type="password"
               className="form-control"
               placeholder="Password"
+              autoComplete="current-password"
+              readOnly={!passwordEditable}
+              onFocus={() => setPasswordEditable(true)}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required

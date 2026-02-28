@@ -6,7 +6,19 @@ const getPendingOwners = async (req, res) => {
     const owners = await User.find({
       role: "owner",
       isApproved: false,
-    });
+    }).select("name email role isApproved profile createdAt");
+
+    res.status(200).json(owners);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+const getAllOwners = async (req, res) => {
+  try {
+    const owners = await User.find({ role: "owner" }).select(
+      "name email role isApproved profile createdAt"
+    );
 
     res.status(200).json(owners);
   } catch (error) {
@@ -23,6 +35,17 @@ const approveOwner = async (req, res) => {
       return res.status(404).json({ message: "Owner not found" });
     }
 
+    const hasRequiredProfile =
+      owner.profile?.phone?.trim() &&
+      owner.profile?.city?.trim() &&
+      owner.profile?.idProof?.trim();
+
+    if (!hasRequiredProfile) {
+      return res.status(400).json({
+        message: "Owner profile is incomplete. Ask owner to update profile before approval.",
+      });
+    }
+
     owner.isApproved = true;
     await owner.save();
 
@@ -35,4 +58,4 @@ const approveOwner = async (req, res) => {
   }
 };
 
-module.exports = { getPendingOwners, approveOwner };
+module.exports = { getPendingOwners, getAllOwners, approveOwner };
