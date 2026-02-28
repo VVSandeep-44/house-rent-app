@@ -1,144 +1,225 @@
-# House Rent App
+# 🏠 Dwell-In – Role-Based House Rental Platform
 
-A full-stack house rental platform with role-based access for **Admin**, **Owner**, and **Renter**.
+Dwell-In is a full-stack rental management platform developed as part of an internship assignment to demonstrate practical full-stack development skills using the MERN stack.
 
-## Features
+The system implements secure authentication, role-based access control, structured approval workflows, and a complete booking lifecycle with a clean and responsive UI.
 
-- Authentication with JWT (Login/Register)
-- Role-based dashboards:
-  - **Admin**: pending owner approvals, owner profiles, renter profiles, search by name/email/phone/city
-  - **Owner**: profile (view/edit + profile photo), add property, view properties, manage booking requests
-  - **Renter**: profile (view/edit + profile photo), browse properties, create bookings, view booking status
-- Owner approval flow with profile completeness validation
-- Responsive dashboard UI with side navigation
+---
 
-## Tech Stack
+## 🎯 Project Objective
 
-- **Frontend**: React + Vite + Bootstrap + Axios
-- **Backend**: Node.js + Express + MongoDB (Mongoose)
-- **Auth**: JWT + bcrypt
+The objective of this project was to build a structured house rental platform supporting three user roles:
 
-## Project Structure
+- **Admin**
+- **Owner**
+- **Renter**
 
-```text
+The application enforces proper access control, input validation, and booking management while maintaining a professional user interface.
+
+---
+
+## 🚀 Tech Stack
+
+### Frontend
+- React (Vite)
+- Bootstrap
+- Framer Motion
+- Axios
+
+### Backend
+- Node.js
+- Express.js
+- MongoDB (Mongoose)
+- JWT Authentication
+- bcrypt (password hashing)
+
+---
+
+## 👥 User Roles & Features
+
+### 🛡 Admin
+- View pending owner registrations
+- Approve owner accounts
+- Access owner and renter profiles
+- Enforce platform-level governance
+
+### 🏢 Owner
+- Add and manage property listings
+- View incoming booking requests
+- Approve or reject bookings
+- Access owner profile
+
+### 🏘 Renter
+- Browse available properties
+- Create booking requests
+- View booking status (Pending / Approved / Rejected)
+- Access renter profile
+
+---
+
+## 🔐 Authentication & Security
+
+- JWT-based authentication
+- Protected frontend routes
+- Middleware-based backend authorization
+- Role-based access control (Admin / Owner / Renter)
+- Password hashing using bcrypt
+- Backend validation for:
+  - Name format (alphabet-only, minimum length)
+  - Email format
+  - Password length (8–12 characters)
+
+Sensitive routes are protected and restricted based on role permissions.
+
+---
+
+## 📅 Booking Workflow
+
+1. Owner registers.
+2. Admin approves owner account.
+3. Owner adds property listings.
+4. Renter browses available properties.
+5. Renter submits booking request.
+6. Owner approves or rejects request.
+7. Booking status updates accordingly.
+
+This ensures a complete end-to-end booking lifecycle implementation.
+
+---
+
+## 🎨 UI Highlights
+
+- Smooth page transitions using Framer Motion
+- Glass-inspired authentication design
+- Custom role selection dropdown
+- Animated interactions and hover effects
+- Responsive layout with consistent theme
+- Structured dashboard sections
+
+---
+
+## 🏗 Architecture Overview
+
+### Frontend
+- Role-based routing
+- ProtectedRoute wrapper for dashboard access
+- Centralized API service using Axios
+- Modular component structure
+
+### Backend
+- Express route separation
+- Controller-based logic
+- Middleware for authentication & authorization
+- MongoDB collections:
+  - Users
+  - Properties
+  - Bookings
+
+---
+
+## 📂 Project Structure
+
 house-rent-app/
-├─ backend/
-├─ frontend/
-├─ Screenshots/
-└─ README.md
-```
+│
+├── backend/
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   ├── middlewares/
+│   └── config/
+│
+├── frontend/
+│   ├── components/
+│   ├── pages/
+│   ├── services/
+│   └── assets/
+│
+└── README.md
 
-## Prerequisites
+---
+
+## ⚙️ Installation & Setup
+
+### Prerequisites
 
 - Node.js (v18+ recommended)
 - npm
-- MongoDB connection string (local or Atlas)
+- MongoDB (local or Atlas)
 
-## Environment Variables
+---
+
+### 1️⃣ Clone Repository
+
+git clone https://github.com/VVSandeep-44/house-rent-app.git
+
+---
+
+### 2️⃣ Backend Setup
+
+cd backend  
+npm install  
+npm run dev  
+
+Backend runs on:  
+http://localhost:5000
+
+---
+
+### 3️⃣ Frontend Setup
+
+cd frontend  
+npm install  
+npm run dev  
+
+Frontend runs on:  
+http://localhost:5173
+
+---
+
+## 🔑 Environment Variables
 
 ### Backend (`backend/.env`)
 
-Use `backend/.env.example` as reference:
-
-```env
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-```
+PORT=5000  
+MONGO_URI=your_mongodb_connection_string  
+JWT_SECRET=your_jwt_secret  
 
 ### Frontend (`frontend/.env`)
 
-Use `frontend/.env.example` as reference:
+VITE_API_URL=http://localhost:5000/api  
 
-```env
-VITE_API_URL=http://localhost:5000/api
-```
+---
 
-## Installation
+## 🧪 Demo Flow
 
-From project root:
-
-```bash
-# backend deps
-cd backend
-npm install
-
-# frontend deps
-cd ../frontend
-npm install
-```
-
-## Run Locally
-
-Open two terminals.
-
-### Terminal 1: Backend
-
-```bash
-cd backend
-npm run dev
-```
-
-Backend runs on: `http://localhost:5000`
-
-### Terminal 2: Frontend
-
-```bash
-cd frontend
-npm run dev
-```
-
-Frontend runs on: `http://localhost:5173` (or Vite-assigned port)
-
-## Demo Flow
-
-1. Register an **Owner** and fill owner profile.
-2. Login as **Admin** and approve owner from Pending Approvals.
+1. Register an **Owner** account.
+2. Login as **Admin** and approve the owner.
 3. Login as **Owner** and add properties.
-4. Register/Login as **Renter**, browse properties, and create bookings.
-5. Owner approves/rejects renter booking requests.
+4. Register/Login as **Renter** and book a property.
+5. Owner approves or rejects booking.
+6. Renter sees updated booking status.
 
-## Screenshots
+---
 
-### Landing Page
+## 🔮 Future Enhancements
 
-![Landing Page](Screenshots/Landing%20Page.png)
+- Email verification system
+- Property image uploads
+- Advanced search and filtering
+- Payment integration
+- Cloud-based image storage
 
-### Login Page
+---
 
-![Login Page](Screenshots/Login%20Page.png)
+## 📌 Conclusion
 
-### Register Page
+Dwell-In demonstrates:
 
-![Register Page](Screenshots/Register%20Page.png)
+- Structured full-stack architecture
+- Role-based access control
+- Secure authentication practices
+- Input validation on frontend and backend
+- Clean UI with responsive design
+- Proper separation of concerns
 
-### Admin Dashboard
-
-![Admin Dashboard](Screenshots/Admin%20Dashboard.png)
-
-### Owner Dashboard
-
-![Owner Dashboard](Screenshots/Owner%20Dashboard.png)
-
-### Renter Dashboard
-
-![Renter Dashboard](Screenshots/Renter%20Dashboard.png)
-
-## Available Scripts
-
-### Backend
-
-- `npm run dev` – start backend with nodemon
-- `npm start` – start backend with node
-
-### Frontend
-
-- `npm run dev` – start Vite dev server
-- `npm run build` – production build
-- `npm run lint` – run ESLint
-- `npm run preview` – preview production build
-
-## Notes
-
-- Profile photos are currently stored as image data in profile payloads for quick implementation.
-- For production, move image storage to cloud/object storage (S3, Cloudinary, Azure Blob, etc.).
+This project reflects practical implementation of MERN stack concepts in a real-world rental management scenario.
